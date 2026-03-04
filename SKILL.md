@@ -1,6 +1,6 @@
 ---
 name: learn-mode
-description: Learning companion for junior developers. When invoked, analyzes what the AI just did in the current session, explains the key concepts and patterns used, and saves structured learning notes to ~/learning-notes/ organized by topic. Trigger with "/learn" or "use the learn-mode skill" after the AI completes a task. Also generates review summaries on request.
+description: Learning companion for junior developers. When invoked, analyzes what the AI just did in the current session, explains the key concepts and patterns used, and saves structured learning notes organized by topic. Trigger with "/learn" or "use the learn-mode skill" after the AI completes a task. Also generates review summaries on request.
 ---
 
 # Learn Mode Skill
@@ -18,6 +18,48 @@ This skill is triggered **only when the user asks**, typically by:
 - Asking for a review: "what have I learned recently?"
 
 **Never activate automatically.** Respect the user's flow.
+
+---
+
+## Phase 0: First-Time Setup (Notes Location)
+
+**Before doing anything else**, check if the notes location has been configured.
+
+### 0.1: Check for Config
+
+Look for a config file at `~/.config/learn-mode/config.json`. If it exists, read the `notes_path` value and use it for all operations.
+
+```json
+// ~/.config/learn-mode/config.json
+{
+  "notes_path": "/Users/someone/my-notes"
+}
+```
+
+### 0.2: If No Config Exists (First Use)
+
+Ask the user where they want to store their learning notes using the AskUserQuestion tool. Offer sensible defaults:
+
+- `~/learning-notes/` — Default home directory location
+- `{current_project}/docs/learning-notes/` — Inside the current project
+- `~/Desktop/learning-notes/` — Desktop for easy access
+- (User can also type a custom path via "Other")
+
+### 0.3: Save the Config
+
+After the user chooses, create the config:
+
+```bash
+mkdir -p ~/.config/learn-mode
+```
+
+Write `~/.config/learn-mode/config.json` with their chosen path. Then create the notes directory if it doesn't exist.
+
+### 0.4: Use the Configured Path
+
+**All references to notes paths in this skill use `{NOTES_PATH}` as a placeholder.** Replace `{NOTES_PATH}` with the value from the config file everywhere: saving notes, updating the index, review mode, organize mode, search commands, etc.
+
+If the config exists, skip the setup question and proceed directly to Phase 1.
 
 ---
 
@@ -107,16 +149,16 @@ Use the format defined in `NOTE_TEMPLATE.md` (in this skill's directory). The no
 ### 3.4: Create the Directory if Needed
 
 ```bash
-mkdir -p ~/learning-notes/{category}
+mkdir -p {NOTES_PATH}/{category}
 ```
 
 ### 3.5: Save the Note
 
-Write the note to `~/learning-notes/{category}/{topic-name}.md`
+Write the note to `{NOTES_PATH}/{category}/{topic-name}.md`
 
 ### 3.6: Update the Index
 
-After saving, update `~/learning-notes/README.md`:
+After saving, update `{NOTES_PATH}/README.md`:
 
 1. Read the current README.md (create if it doesn't exist)
 2. Add the new note to the appropriate category section
@@ -132,7 +174,7 @@ Personal knowledge base built while coding with AI.
 
 ## How to Use
 - **Browse** by topic below
-- **Search** with `grep -r "keyword" ~/learning-notes/`
+- **Search** with `grep -r "keyword" {NOTES_PATH}/`
 - **Review** — Say "/learn review my notes" to get a summary of what you've learned, spaced repetition prompts, and suggestions for topics to revisit. Great for weekly check-ins.
 - **Organize** — Say "/learn organize my notes" when your notes feel messy. Finds duplicates, adds cross-links, and cleans up miscategorized notes. Run this monthly or after a burst of learning.
 
@@ -162,7 +204,7 @@ _Total notes: 3_
 When the user asks for a review (e.g., "review my learning notes", "what have I learned this week?", "quiz me"):
 
 ### 4.1: Review Summary
-- Read notes from `~/learning-notes/`
+- Read notes from `{NOTES_PATH}/`
 - Filter by date range if specified (e.g., "this week", "last 7 days")
 - Generate a summary grouping concepts by category
 - Highlight connections between topics
@@ -175,7 +217,7 @@ When the user asks for a review (e.g., "review my learning notes", "what have I 
 ### 4.3: Save Review (Optional)
 If generating a weekly review, save to:
 ```
-~/learning-notes/reviews/YYYY-WXX-review.md
+{NOTES_PATH}/reviews/YYYY-WXX-review.md
 ```
 
 ---
@@ -185,7 +227,7 @@ If generating a weekly review, save to:
 When the user asks to organize (e.g., "organize my notes", "clean up learning notes", "deduplicate notes"):
 
 ### 5.1: Audit All Notes
-- Read every note in `~/learning-notes/` recursively
+- Read every note in `{NOTES_PATH}/` recursively
 - Build an internal map of: topic, date, key concepts, cross-references
 
 ### 5.2: Identify Issues
@@ -212,7 +254,7 @@ Wait for user approval before making changes.
 - Merge notes by combining content under dated sections, preserving all unique information
 - Add `## 🔗 Related` sections with links between related notes
 - Move miscategorized notes and update all references
-- Update `~/learning-notes/README.md` to reflect the new structure
+- Update `{NOTES_PATH}/README.md` to reflect the new structure
 
 ### 5.5: Generate Concept Map
 After organizing, output a brief "knowledge map" showing how topics connect:
@@ -336,7 +378,7 @@ This lets the user access the right level of detail for their current need — q
 > - Use `%w` (not `%v`) in `fmt.Errorf` to wrap errors
 > - Wrapped errors create a chain you can inspect with `errors.Is()` and `errors.As()`
 >
-> 📝 *Note saved to `~/learning-notes/go/nil-checks-and-error-wrapping.md`*
+> 📝 *Note saved to `{NOTES_PATH}/go/nil-checks-and-error-wrapping.md`*
 
 ---
 
