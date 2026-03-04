@@ -64,27 +64,28 @@ After teaching, save a structured learning note. Follow these rules:
 
 ### 3.1: Determine the Topic Category
 
-Categorize based on the primary technology or concept:
+Categorize based on the primary skill area, not the specific technology. Use a `{language}/` subdirectory only when a note is truly language-specific (e.g., `language/python-list-comprehensions.md`).
 
-| Category | When to Use |
-|----------|------------|
-| `go/` | Go language features, stdlib, patterns |
-| `python/` | Python language, libraries, patterns |
-| `typescript/` | TypeScript/JavaScript, Node.js, React |
-| `kubernetes/` | K8s resources, kubectl, operators, Helm |
-| `docker/` | Dockerfiles, container concepts |
-| `git/` | Git commands, workflows, branching |
-| `bash/` | Shell scripting, CLI tools, Linux commands |
-| `networking/` | DNS, HTTP, TLS, load balancing |
-| `databases/` | SQL, NoSQL, query patterns, migrations |
-| `patterns/` | Design patterns, architecture, principles |
-| `testing/` | Unit tests, integration tests, mocking |
-| `security/` | Auth, secrets, encryption, RBAC |
-| `devops/` | CI/CD, pipelines, deployment |
-| `cloud/` | Azure, AWS, cloud services |
-| `general/` | Anything that doesn't fit above |
+| Category | When to Use | Examples |
+|----------|------------|---------|
+| `language/` | Language-specific syntax, features, idioms | Python decorators, Go goroutines, JS promises, Rust ownership |
+| `data-structures/` | Arrays, maps, trees, graphs, when to use what | Hash maps vs trees, linked lists, stacks/queues |
+| `algorithms/` | Sorting, searching, recursion, Big-O thinking | Binary search, BFS/DFS, time complexity analysis |
+| `debugging/` | Finding and fixing bugs, reading errors, using debuggers | Stack traces, breakpoints, print debugging, log analysis |
+| `git/` | Version control workflows, commands, collaboration | Branching, merging, rebasing, resolving conflicts, PRs |
+| `terminal/` | Command line, shell scripting, CLI tools | Bash basics, piping, environment variables, PATH |
+| `apis/` | HTTP, REST, GraphQL, request/response, status codes | Making API calls, reading docs, auth tokens, rate limits |
+| `databases/` | SQL, NoSQL, data modeling, queries, migrations | JOINs, indexes, schema design, ORMs |
+| `testing/` | Writing and running tests, test strategy, mocking | Unit tests, integration tests, TDD, test coverage |
+| `architecture/` | Code organization, design patterns, system design | MVC, separation of concerns, dependency injection, microservices |
+| `errors/` | Error handling, validation, edge cases, defensive coding | Try/catch, error types, input validation, graceful failures |
+| `tooling/` | Dev environment, editors, linters, formatters, build tools | VS Code, ESLint, Webpack, Docker, package managers |
+| `web/` | HTML, CSS, DOM, browser concepts, frontend fundamentals | Flexbox, responsive design, event handling, accessibility |
+| `devops/` | CI/CD, deployment, containers, infrastructure | GitHub Actions, Docker, cloud services, monitoring |
+| `security/` | Auth, secrets, common vulnerabilities, safe coding | OWASP basics, XSS, SQL injection, environment variables |
+| `general/` | Anything that doesn't fit above | Career skills, code review etiquette, reading documentation |
 
-If a note spans multiple categories, pick the **primary** one.
+If a note spans multiple categories, pick the **primary** one. When in doubt, **ask the user** which category feels right — this also reinforces their mental model of how concepts connect.
 
 ### 3.2: File Naming
 
@@ -130,9 +131,10 @@ The README.md format should be:
 Personal knowledge base built while coding with AI.
 
 ## How to Use
-- Browse by topic below
-- Search with `grep -r "keyword" ~/learning-notes/`
-- Ask Copilot: "review my recent learning notes"
+- **Browse** by topic below
+- **Search** with `grep -r "keyword" ~/learning-notes/`
+- **Review** — Say "/learn review my notes" to get a summary of what you've learned, spaced repetition prompts, and suggestions for topics to revisit. Great for weekly check-ins.
+- **Organize** — Say "/learn organize my notes" when your notes feel messy. Finds duplicates, adds cross-links, and cleans up miscategorized notes. Run this monthly or after a burst of learning.
 
 ---
 
