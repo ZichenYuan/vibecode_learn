@@ -247,12 +247,9 @@ Apply these evidence-based learning principles when writing and organizing notes
 Source types → code generator → output artifacts → deploy → runtime
 ```
 
-**Contrast Examples** — Show ❌ wrong and ✅ right side by side. The brain learns categories faster by seeing what something is NOT:
+**Show the Right Way** — Only include correct, working code. Explain *why* it's the right approach rather than showing broken alternatives that could be copied by mistake:
 ```go
-// ❌ Silent failure
-result, _ := doThing()
-
-// ✅ Handle the error
+// Always handle errors explicitly — ignoring them hides bugs
 result, err := doThing()
 if err != nil {
     return fmt.Errorf("doing thing: %w", err)
