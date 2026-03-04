@@ -178,6 +178,110 @@ If generating a weekly review, save to:
 
 ---
 
+## Phase 5: Organize Mode
+
+When the user asks to organize (e.g., "organize my notes", "clean up learning notes", "deduplicate notes"):
+
+### 5.1: Audit All Notes
+- Read every note in `~/learning-notes/` recursively
+- Build an internal map of: topic, date, key concepts, cross-references
+
+### 5.2: Identify Issues
+Flag the following:
+- **Duplicates**: Notes covering the same concept (e.g., two notes on error handling)
+- **Overlap**: Notes with significant content overlap that should be consolidated
+- **Missing cross-references**: Notes that discuss related concepts but don't link to each other
+- **Miscategorized**: Notes in the wrong category directory
+- **Stale content**: Notes that contradict newer notes or contain outdated information
+
+### 5.3: Propose Changes
+Present a summary of proposed changes to the user before executing:
+```
+📋 Organize Plan:
+- Merge: "go/error-handling.md" + "go/error-wrapping.md" → "go/error-handling.md"
+- Move: "general/dockerfile-layers.md" → "docker/dockerfile-layers.md"
+- Add cross-links: "kubernetes/reconciler-pattern.md" ↔ "kubernetes/crd-pipelines.md"
+- Remove duplicate section from "git/git-stash-workflow.md"
+```
+
+Wait for user approval before making changes.
+
+### 5.4: Execute Changes
+- Merge notes by combining content under dated sections, preserving all unique information
+- Add `## 🔗 Related` sections with links between related notes
+- Move miscategorized notes and update all references
+- Update `~/learning-notes/README.md` to reflect the new structure
+
+### 5.5: Generate Concept Map
+After organizing, output a brief "knowledge map" showing how topics connect:
+```
+Kubernetes Operator Development
+├── kubebuilder-printer-columns.md (CRD annotations)
+├── crd-pipelines.md (CRD lifecycle)
+│   └── relates to: reconciler-pattern.md
+└── reconciler-pattern.md (controller internals)
+
+Go Fundamentals
+├── error-handling.md
+└── ...
+```
+
+---
+
+## Phase 6: Effective Learning Principles
+
+Apply these evidence-based learning principles when writing and organizing notes. These are drawn from cognitive science (spaced repetition, dual coding, elaborative interrogation, interleaving) and should be embedded into every note and review.
+
+### 6.1: Note Writing Principles
+
+**Chunking** — Break complex topics into small, self-contained pieces. Each note should cover ONE concept well, not five concepts poorly. If a note exceeds 150 lines, split it.
+
+**Elaborative Interrogation** — Don't just state facts. Ask "why?" and "how?" in the note itself:
+- ❌ "Use `%w` to wrap errors"
+- ✅ "Use `%w` to wrap errors — **why?** Because `%w` preserves the error chain, letting callers use `errors.Is()` to check for specific underlying errors. With `%v`, that chain is broken."
+
+**Dual Coding** — Pair every explanation with a concrete code example. The brain encodes verbal and visual information separately — having both strengthens recall. Use diagrams (ASCII art) for flows and pipelines:
+```
+Source types → code generator → output artifacts → deploy → runtime
+```
+
+**Contrast Examples** — Show ❌ wrong and ✅ right side by side. The brain learns categories faster by seeing what something is NOT:
+```go
+// ❌ Silent failure
+result, _ := doThing()
+
+// ✅ Handle the error
+result, err := doThing()
+if err != nil {
+    return fmt.Errorf("doing thing: %w", err)
+}
+```
+
+**Connections Over Isolation** — Always link new concepts to things already known. Every note should have a "Related" section. The brain stores knowledge in networks, not lists — isolated facts are forgotten faster.
+
+### 6.2: Review Principles
+
+**Spaced Repetition** — Notes should be revisited at increasing intervals: 1 day, 3 days, 1 week, 2 weeks, 1 month. During review mode, prioritize notes that are due for review based on their creation/last-review date.
+
+**Active Recall** — During review, don't just re-read notes. Prompt the user to recall before showing the answer:
+- "You learned about CRD update pipelines 5 days ago. Can you describe the steps without looking?"
+- Then show the note for self-assessment.
+
+**Interleaving** — During review, mix topics from different categories rather than reviewing all Go notes, then all Kubernetes notes. Interleaved practice improves the ability to distinguish between concepts and apply the right one in context.
+
+### 6.3: Organization Principles
+
+**Progressive Summarization** — Notes should have layers of detail:
+1. Title (scannable in README index)
+2. Key Takeaways section (30-second refresher)
+3. Full explanation (deep reference)
+
+This lets the user access the right level of detail for their current need — quick reminder vs. deep study.
+
+**Concept Clustering** — Group related notes under a shared mental model. For example, "Kubernetes Operator Development" is a cluster containing printer columns, CRD pipelines, reconciler patterns. Make these clusters explicit in README.md and in each note's Related section.
+
+---
+
 ## Tone & Style Guidelines
 
 - **Be encouraging** — "Great question!" not "You should know this"
